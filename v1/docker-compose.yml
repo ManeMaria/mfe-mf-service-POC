@@ -1,0 +1,30 @@
+services:
+  v1-host:
+    build: ./apps/host
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  v1-app1:
+    build: ./apps/app1
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  v1-app2:
+    build: ./apps/app2
+    expose:
+      - "80"
+    restart: unless-stopped
+
+  gateway:
+    image: nginx:1.27-alpine
+    ports:
+      - "8090:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - host
+      - app1
+      - app2
+    restart: unless-stopped
